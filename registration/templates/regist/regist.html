@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title%}
+貸出登録ページ
+{% endblock title %}
+{% block content %}
+<h1 class="name">貸出登録ページ</h1><div>
+<table class=form>
+<form action="" method="POST">
+    {% csrf_token %}
+    <tbody>
+        <tr>
+        <td>
+        {{form.book.label}}
+        {{ form.book }}</td>
+        </tr>
+        <tr>
+            <td>
+            {{form.user.label}}
+            {{ form.user }}</td>
+        </tr>
+        <tr>
+            <td>
+            {{form.mail.label}}
+            {{ form.mail }}</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td><input type="submit" value="借りる">
+
+        </td>
+    </tr>
+</form></table></div>
+{% endblock content %}

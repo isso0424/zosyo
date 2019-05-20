@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="chrome">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>{% block title %}sample{% endblock title%}</title>
+</head>
+<body>
+    <header id = header>
+        <a id="title">蔵書管理システム</p>
+    </header>
+    <div class = "conteiner" id = conteiner>
+    {% block content %}
+    {{ content }}
+    {% endblock content %}</div>
+</body>
+</html>

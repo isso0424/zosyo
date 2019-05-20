@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title%}
+蔵書管理システム-ホーム
+{% endblock title%}
+{% block content%}
+<div>
+<h1 class="name_home">蔵書管理システム</h1></div>
+<table border="1" class = "table">
+    <thead>
+        <tr>
+            <th>借りた本</th>
+            <th>借りた人</th>
+            <th>連絡用メールアドレス</th>
+            <th>借りた日</th>
+        </tr>
+    </thead>
+    <thead>
+        {% for regist in messages %}
+        <tr>
+            <th>
+                {{ regist.book }}
+            </th>
+            <th>
+                {{ regist.user}}
+            </th>
+            <th>
+                {{regist.mail}}
+            </th>
+            <th>
+                {{regist.day}}
+            </th>
+        </tr>
+        {% endfor %}
+    </thead>
+</table>
+{% endblock content%}
