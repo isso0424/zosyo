@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .form import RegistFrom
+from .form import RegistFrom,ReturForm
 from .models import Regist
 from django import forms
 from . import form
@@ -27,4 +27,11 @@ def home(request):
     d = {
         'messages':Regist.objects.all()
     }
-    return render(request, 'regist/home.html',d)
+    return render(request, 'regist/home.html', d)
+def retur(request):
+    form = ReturForm(request.POST or None)
+    if form.is_valid():
+        b = form.cleaned_data.get('book')
+        Regist.objects.filter(book=b).delete()
+        return redirect('regist:retur')
+    return render(request, 'regist/retur.html', {'form':form})

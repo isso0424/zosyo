@@ -17,3 +17,17 @@ class RegistFrom(forms.Form):
         widget=forms.TextInput(),
         max_length=100
     )
+class ReturForm(forms.Form):
+    book = forms.CharField(
+        label='返す本の名前',
+        required=True,
+        widget=forms.TextInput(),
+        max_length=100
+    )
+class ReturnForm_user(forms.Form):
+    user = forms.CharField(
+        label='使用したユーザー名',
+        required=True,
+        widget=forms.TextInput(),
+        max_length=50
+    )

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title%}
+蔵書返却ページ
+{% endblock title%}
+{% block content %}
+<h1 class="name">蔵書返却ページ</h1><div><div>
+<table class=form>
+<form action="" method="POST">
+    {% csrf_token %}
+    <tbody>
+        <tr>
+            <td>{{form.book.label}}</td>
+            <td>{{form.book}}</td>
+        </tr>
+    </tbody>
+    <tr><td><input type="submit" value="返す"></td></tr>
+</form></table></div>
+{% endblock content %}
