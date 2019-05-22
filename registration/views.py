@@ -12,15 +12,20 @@ def index(request):
         regist = Regist()
         regist.day = timezone.datetime.today()
         regist.book = form.cleaned_data.get('book')
-        regist.mail = form.cleaned_data.get('mail')
         regist.user = form.cleaned_data.get('user')
+        regist.status = "貸出中"
         print('get!')
-        Regist.objects.create(
+        try:
+            Regist.objects.filter(book=regist.book,user='なし').delete()
+            Regist.objects.create(
             book=regist.book,
-            mail=regist.mail,
             user=regist.user,
-            day=regist.day
-        )
+            day=regist.day,
+            status=regist.status,
+            mail=regist.mail
+            )
+        except:
+            pass
         return redirect('regist:regist')
     return render(request, 'regist/regist.html', {'form': form})
 def home(request):
