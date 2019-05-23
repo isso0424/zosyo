@@ -50,3 +50,15 @@ a{
 .menu{
     margin:0px 20px;
 }
+.hey{
+    background-color: #ffffdc !important;
+    width:100px;
+    padding:5px;
+    border-radius:10px
+}
+.error{
+    font-site:10px;
+}
+.tables{
+    border: 5px;
+}

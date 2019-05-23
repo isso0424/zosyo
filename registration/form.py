@@ -1,5 +1,6 @@
 from django import forms
 
+
 class RegistFrom(forms.Form):
     mail = forms.CharField(
         label="メールアドレスを入力",
@@ -17,6 +18,8 @@ class RegistFrom(forms.Form):
         widget=forms.TextInput(),
         max_length=100
     )
+
+
 class ReturForm(forms.Form):
     book = forms.CharField(
         label='返す本の名前',
@@ -24,10 +27,20 @@ class ReturForm(forms.Form):
         widget=forms.TextInput(),
         max_length=100
     )
-class ReturnForm_user(forms.Form):
-    user = forms.CharField(
-        label='使用したユーザー名',
+
+
+class Who_want(forms.Form):
+    regist = forms.CharField(
         required=True,
         widget=forms.TextInput(),
-        max_length=50
+        max_length=20
+    )
+
+
+class TourokuForm(forms.Form):
+    book = forms.CharField(
+        required=True,
+        widget=forms.TextInput(),
+        max_length=100,
+        label='登録したい本の名前'
     )

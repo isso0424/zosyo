@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title%}
+貸出登録ページ
+{% endblock title %}
+{% block content %}
+<h1 class="name">蔵書登録ページ</h1>
+<table>
+    <form method="post">
+    {% csrf_token %}
+    <thead><tr><td>{{form.book.label}}
+                    {{form.book}}</td></tr></thead>
+    <tr><td><input type="submit" value="登録"></td></tr>
+    </form>
+</table>
+{% endblock content %}

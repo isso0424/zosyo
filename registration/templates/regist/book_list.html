@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title%}
+蔵書返却ページ
+{% endblock title%}
+{% block content %}
+<div>
+    <h1 class="name">蔵書リスト</h1>
+    <table border="1" class = "table">
+        <thead>
+        <tr>
+            <th>本の名前</th>
+
+        </tr>
+        </thead>
+        <thead>
+        {% for books in In_lab %}
+        <tr class="tables">
+            <th>{{ books.book }}</th>
+        </tr>
+        {% endfor %}
+        </thead>
+    </table>
+</div>
+{% endblock content %}

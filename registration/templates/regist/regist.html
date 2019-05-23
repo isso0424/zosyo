@@ -13,6 +13,9 @@
         {{form.book.label}}
         {{ form.book }}</td>
         </tr>
+        {% if error %}
+        <tr><td class="error">!!!error : その本は存在しないか,貸し出されています!!!</td></tr>
+        {% endif %}
         <tr>
             <td>
             {{form.user.label}}
@@ -29,5 +32,8 @@
 
         </td>
     </tr>
-</form></table></div>
+</form>
+</table>
+
+</div>
 {% endblock content %}

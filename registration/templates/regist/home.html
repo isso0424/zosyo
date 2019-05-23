@@ -6,12 +6,15 @@
 <div>
 <h1 class="name_home">蔵書管理システム</h1></div>
 <table border="1" class = "table">
+    <h3 class="hey">貸出中の本</h3>
     <thead>
         <tr>
             <th>借りた本</th>
             <th>借りた人</th>
             <th>連絡用メールアドレス</th>
             <th>借りた日</th>
+            <th>借りたい人</th>
+            <th>次に借りる予約</th>
         </tr>
     </thead>
     <thead>
@@ -29,6 +32,16 @@
             <th>
                 {{regist.day}}
             </th>
+            <th>
+                {{regist.who_want}}
+            </th>
+            <form method="POST">
+                {% csrf_token %}
+            <th>
+                {{form.regist}}
+                <input type="submit" value="予約">
+            </th>
+            </form>
         </tr>
         {% endfor %}
     </thead>

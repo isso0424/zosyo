@@ -13,14 +13,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Regist',
+            name='regist',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('book', models.CharField(max_length=100)),
                 ('user', models.CharField(max_length=20)),
-                ('day', models.DateTimeField(default=django.utils.timezone.now)),
+                ('day', models.CharField(max_length=20)),
                 ('status', models.CharField(max_length=10)),
                 ('mail', models.CharField(max_length=30)),
+                ('who_want', models.CharField(max_length=20)),
             ],
         ),
     ]
