@@ -1,49 +1,73 @@
 {% extends "base.html" %}
 {% block title%}
-蔵書管理システム-ホーム
+ホーム
 {% endblock title%}
 {% block content%}
 <div>
-<h1 class="name_home">蔵書管理システム</h1></div>
-<table border="1" class = "table">
-    <h3 class="hey">貸出中の本</h3>
-    <thead>
-        <tr>
-            <th>借りた本</th>
-            <th>借りた人</th>
-            <th>連絡用メールアドレス</th>
-            <th>借りた日</th>
-            <th>借りたい人</th>
-            <th>次に借りる予約</th>
-        </tr>
-    </thead>
-    <thead>
-        {% for regist in messages %}
-        <tr>
-            <th>
-            {{ regist.book }}
-            </th>
-            <th>
-                {{ regist.user}}
-            </th>
-            <th>
-                {{regist.mail}}
-            </th>
-            <th>
-                {{regist.day}}
-            </th>
-            <th>
-                {{regist.who_want}}
-            </th>
-            <form method="POST">
-                {% csrf_token %}
-            <th>
-                {{form.regist}}
-                <input type="submit" value="予約">
-            </th>
-            </form>
-        </tr>
-        {% endfor %}
-    </thead>
-</table>
-{% endblock content%}
+<h2 class="name" style="width: 285px;">蔵書管理システム ホーム</h1></div>
+<div class="naraberu">
+    <div class="tablese">
+        <table border="1" class="table">
+                {% if messages %}
+            <h3 class="hey">貸出中の本</h3>
+            <thead>
+            <tr>
+                <th>借りた本</th>
+                <th>借りた人</th>
+                <th>連絡用メールアドレス</th>
+                <th>借りた日</th>
+            </tr>
+            </thead>
+            <thead>
+            {% for regist in messages %}
+            <tr>
+                <th>
+                    {{ regist.book }}
+                </th>
+                <th>
+                    {{ regist.user}}
+                </th>
+                <th>
+                    {{regist.mail}}
+                </th>
+                <th>
+                    {{regist.day}}
+                </th>
+            </tr>
+            {% endfor %}
+            </thead>
+            {% endif %}
+            {% if not messages %}
+            <h4>貸出中の本はありません</h4>
+            {% endif%}
+        </table>
+    </div>
+    <div class="tablese">
+        <table border="1" class="table">
+            {% if next  %}
+            <h4 class="hey">貸出予約リスト</h4>
+            <thead>
+            <tr>
+                <th>予約されている本</th>
+                <th>予約している人</th>
+                <th>状態</th>
+            </tr>
+            </thead>
+            <thead>
+            {% for regist in next %}
+            <tr>
+                <th>{{ regist.book }}</th>
+                <th>{{ regist.who_want }}</th>
+                <th>{{ regist.status }}</th>
+            </tr>
+            {% endfor %}
+            </thead>
+            {% endif %}
+            {% if not next %}
+            <h4>予約中の本はありません</h4>
+            {% endif%}
+        </table>
+    </div>
+    
+</div>
+    {% endblock content%}

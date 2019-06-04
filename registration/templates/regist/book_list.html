@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block title%}
-蔵書返却ページ
+蔵書リスト
 {% endblock title%}
 {% block content %}
 <div>
-    <h1 class="name">蔵書リスト</h1>
+    <div class="naraberu">
+    <div class="tablese">
+    <h3 class="name" style="width:123px;">蔵書リスト</h3>
     <table border="1" class = "table">
         <thead>
         <tr>
@@ -20,5 +22,6 @@
         {% endfor %}
         </thead>
     </table>
+    </div></div>
 </div>
 {% endblock content %}

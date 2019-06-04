@@ -3,7 +3,7 @@
 貸出登録ページ
 {% endblock title %}
 {% block content %}
-<h1 class="name">貸出登録ページ</h1><div>
+<h2 class="name" style="width: 180px">貸出登録ページ</h2><div>
 <table class=form>
 <form action="" method="POST">
     {% csrf_token %}
@@ -14,7 +14,10 @@
         {{ form.book }}</td>
         </tr>
         {% if error %}
-        <tr><td class="error">!!!error : その本は存在しないか,貸し出されています!!!</td></tr>
+        <tr><td class="error">!!!error : その本は存在しません!!!</td></tr>
+        {% endif %}
+        {% if error_resrva %}
+        <tr><td class="error">!!!error : その本は予約されています !!!</td></tr>
         {% endif %}
         <tr>
             <td>

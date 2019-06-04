@@ -6,5 +6,6 @@ urlpatterns = (
     url(r'^home', views.home, name='home'),
     url(r'^retur', views.retur, name='retur'),
     url(r'^book_list', views.book_list, name='book_list'),
-    url(r'^touroku', views.touroku,name='touroku')
+    url(r'^touroku', views.touroku, name='touroku'),
+    url(r'^reservation', views.reservation, name='reservation')
 )

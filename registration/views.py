@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .form import RegistFrom, ReturForm, Who_want, TourokuForm
-from .models import Registration
+from .models import Registration, Reservation
 from django.utils import timezone
 
 
@@ -8,29 +8,45 @@ from django.utils import timezone
 
 
 def index(request):
+    if Reservation.objects.all().exists():
+        Reservation.objects.all().delete()
     form = RegistFrom(request.POST or None)
     if form.is_valid():
         import datetime
         regist = Registration()
-        regist.day = timezone.datetime.today()
+        day = timezone.datetime.today()
+        regist.day = str(day).split(' ')[0]
         regist.book = form.cleaned_data.get('book')
         regist.user = form.cleaned_data.get('user')
         regist.mail = form.cleaned_data.get('mail')
         regist.status = "貸出中"
         regist.who_want = 'なし'
         print('get!')
-        r = Registration.objects.filter(status='ラボ内', book=regist.book).exists()
-        print(r)
-        if Registration.objects.filter(status='ラボ内').exists():
-            if Registration.objects.filter(book=regist.book).exists():
-                Registration.objects.filter(book=regist.book).delete()
+        if Registration.objects.filter(book=regist.book, status='ラボ内').exists():
+            if Registration.objects.filter(book=regist.book).exclude(who_want='なし').exists():
+                regist.who_want = Registration.objects.filter(book=regist.book).values('who_want')[0]
+                print(regist.who_want)
+                print(regist.user)
+                if regist.who_want['who_want'] == regist.user:
+                    Registration.objects.filter(book=regist.book).delete()
+                    Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                                status='貸出中', mail=regist.mail, who_want='なし')
+                    return redirect('regist:regist')
+                else:
+                    d = {'form': form, 'error_reseva': True}
+            else:
+                regist.who_want = 'なし'
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                             status='貸出中', mail=regist.mail, who_want=regist.who_want)
                 return redirect('regist:regist')
+        else:
+            if Registration.objects.filter(book=regist.book, status='貸出中', who_want='なし').exists():
+                Reservation.objects.create(wtr=regist.book, who=regist.user)
+                return redirect('regist:reservation')
+            elif Registration.objects.filter(book=regist.book, status='貸出中').exists():
+                d = {'form': form, 'error_resrva': True}
             else:
                 d = {'form': form, 'error': True, }
-        else:
-            d = {'form': form, 'error': True, }
 
     else:
         d = {'form': form, }
@@ -38,13 +54,8 @@ def index(request):
 
 
 def home(request):
-    form = Who_want(request.POST or None)
-    if form.is_valid():
-        regist = Registration()
-        regist.who_want = form.cleaned_data.get('regist')
-        Registration.objects.add(who_want=regist.who_want, )
-        return redirect('regist:home')
-    d = {'messages': Registration.objects.filter(status="貸出中"), 'form': form, }
+    d = {'messages': Registration.objects.filter(status="貸出中"),
+         'next': Registration.objects.exclude(who_want='なし')}
     return render(request, 'regist/home.html', d)
 
 
@@ -53,14 +64,26 @@ def retur(request):
     if form.is_valid():
         regist = Registration()
         regist.book = form.cleaned_data.get('book')
-        Registration.objects.filter(book=regist.book).delete()
-        regist.mail = 'なし'
-        regist.user = 'なし'
-        regist.day = None
-        regist.status = "ラボ内"
-        Registration.objects.create(book=regist.book, user=regist.user, day=None,
-                                    status=regist.status, mail=regist.mail)
-        return redirect('regist:retur')
+        if Registration.objects.filter(book=regist.book).exists():
+            if Registration.objects.filter(book=regist.book).exclude(who_want='なし').exists():
+                regist.who_want = Registration.objects.filter(book=regist.book).values('who_want')[0]
+                Registration.objects.filter(book=regist.book).delete()
+                regist.mail = 'なし'
+                regist.user = 'なし'
+                regist.day = 0
+                regist.status = "ラボ内"
+                Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                            status=regist.status, mail=regist.mail, who_want=regist.who_want['who_want'])
+            else:
+                Registration.objects.filter(book=regist.book).delete()
+                regist.mail = 'なし'
+                regist.user = 'なし'
+                regist.day = 0
+                regist.status = "ラボ内"
+                Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                            status=regist.status, mail=regist.mail, who_want='なし')
+            return redirect('regist:retur')
+
     return render(request, 'regist/retur.html', {'form': form})
 
 
@@ -79,10 +102,37 @@ def touroku(request):
             Registration.objects.create(
                 book=regist.book,
                 status=regist.status,
-                day=None,
+                day='なし',
                 mail='なし',
                 user='なし',
                 who_want='なし'
             )
             return redirect('regist:touroku')
     return render(request, 'regist/touroku.html', {'form': form})
+
+
+def reservation(request):
+    form = Who_want(request.POST or None)
+    wt = Reservation.objects.filter().values('wtr')[0]
+    wh = Reservation.objects.filter().values('who')[0]
+    if request.method == 'POST':
+        if 'yes' in request.POST:
+            print(wt)
+            a = Registration.objects.filter(book=wt['wtr']).values()[0]
+            Registration.objects.filter(book=wt['wtr']).delete()
+            Registration.objects.create(
+                book=wt['wtr'],
+                status=a['status'],
+                user=a['user'],
+                mail=a['mail'],
+                who_want=wh['who'],
+                day=a['day'],
+            )
+            Reservation.objects.all().delete()
+            return redirect('regist:home')
+        elif 'no' in request.POST:
+            return redirect('regist:home')
+    d = {'reser_book': wt,
+         'form': form,
+         }
+    return render(request, 'regist/reservation.html', d)

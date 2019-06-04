@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title%}
+予約確認ページ
+{% endblock title%}
+{% block content%}
+<div>
+    <h1>蔵書予約確認ページ</h1>
+    <p>「{{ reser_book.wtr }}」を次に借りるための予約をしますか?</p>
+    <form action="" method="post">
+        {% csrf_token %}
+  <input type="submit" value="はい" name="yes">
+  <input type="submit" value="いいえ" name="no">
+
+</form>
+</div>
+{% endblock content %}

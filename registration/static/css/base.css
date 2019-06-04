@@ -1,23 +1,27 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
 #header{
-    background-color: coral;
-    height: 20px;
-    padding: 10px 20px 25px 5px;
-    border: 30px 0px 20px 0px;
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
     margin: auto;
-    float: top;
+    overflow: hidden;
 }
 body{
     margin: 0px;
-    background-image: url(https://www.pakutaso.com/shared/img/thumb/171030ell_DSC1941_TP_V.jpg);
+    background-image: url(/static/pictures/zosyo_background.jpg);
+    background: brightness(60%);
 }
 .name{
     float: top !important;
     background-color: #ffffdc !important;
     margin:10px !important;
     background-image: none !important; 
-    width: 230px !important;
     height: auto;
     border-radius: 10px;
+    padding: 3px
 }
 .form{
     background-color: #ffffdc !important;
@@ -27,38 +31,58 @@ body{
     width: auto !important;
     height: auto;
     border-radius: 10px;
-}
-#title{
-    padding: 0px;
-    margin: 0px;
+    padding: 5px
 }
 .table{
-    background-color: wheat 
+    background-color: wheat;
+    width: auto;
 }
 .name_home{
     float: top !important;
     background-color: #ffffdc !important;
     margin:10px !important;
     background-image: none !important; 
-    width: 270px !important;
     height: auto;
     border-radius: 10px;
+    white-space: nowrap;
 }
 a{
     float: left !important;
 }
 .menu{
-    margin:0px 20px;
+    padding:10px 20px;
+    float: left;
+    background-image: url(/static/pictures/freebu28_3.gif)
 }
 .hey{
     background-color: #ffffdc !important;
-    width:100px;
+    width:auto;
     padding:5px;
     border-radius:10px
 }
 .error{
-    font-site:10px;
+    font-size:10px;
 }
 .tables{
     border: 5px;
+}
+.tablese{
+    background-color: #ffffdc !important;
+    margin:10px;
+    border-radius: 10px;
+    padding: 3px
+    
+}
+.naraberu{
+    display: inline-block;
+}
+li{
+    float: left;
+    list-style-type: none;
+    border: 2px solid #333;
+    margin-left: 5px;
+}
+
+.conteiner{
+    margin-left: 5px
 }
