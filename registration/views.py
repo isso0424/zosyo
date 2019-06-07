@@ -36,6 +36,7 @@ def index(request):
                     d = {'form': form, 'error_reseva': True}
             else:
                 regist.who_want = 'なし'
+                Registration.objects.filter(book=regist.book).delete()
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                             status='貸出中', mail=regist.mail, who_want=regist.who_want)
                 return redirect('regist:regist')
