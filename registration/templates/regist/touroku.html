@@ -1,15 +1,20 @@
+<!--base.htmlをもととして使うための宣言-->
 {% extends "base.html" %}
-{% block title%}
-貸出登録ページ
+<!--変化させるタイトル-->
+蔵書登録ページ
 {% endblock title %}
+<!--base.htmlの対応部分に入れるための block content する-->
 {% block content %}
 <h2 class="name" style="width: 178px">蔵書登録ページ</h2>
 <table class="form">
-    <form method="post">
-    {% csrf_token %}
-    <thead><tr><td>{{form.book.label}}
-                    {{form.book}}</td></tr></thead>
-    <tr><td><input type="submit" value="登録"></td></tr>
+    <form method="post"><!--methodをpostに-->
+    {% csrf_token %}<!--これしないとエラー吐く(セキュリティ的な問題で-->
+    <thead><tr><td>
+        <!--viewで定義したformのなかのbookを使う-->
+            <!--.labelはform.pyで定義したlabelをhtmlに出力する-->
+            {{form.book.label}}
+            {{form.book}}</td></tr></thead>
+    <tr><td><input type="submit" value="登録"></td></tr><!--submitぐらいは知ってるよね？-->
     </form>
 </table>
-{% endblock content %}
+{% endblock content %}<!--endblock content する-->

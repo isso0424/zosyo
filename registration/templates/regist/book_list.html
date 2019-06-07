@@ -1,8 +1,12 @@
+<!--base.htmlをもととして使うための宣言-->
 {% extends "base.html" %}
+<!--変化させるタイトル-->
 {% block title%}
 蔵書リスト
 {% endblock title%}
+<!--base.htmlの対応部分に入れるための block content する-->
 {% block content %}
+<!--しばらくTDNhtml-->
 <div>
     <div class="naraberu">
     <div class="tablese">
@@ -15,13 +19,15 @@
         </tr>
         </thead>
         <thead>
-        {% for books in In_lab %}
+        <!--renderで渡された辞書をforに入れて使う-->
+        {% for books in In_lab %}<!--渡されたIn_labは辞書のリストなのでforに入れると辞書になる-->
         <tr class="tables">
-            <th>{{ books.book }}</th>
+            <th>{{ books.book }}</th><!--booksのなかのkeyがbookなものを取り出す-->
         </tr>
-        {% endfor %}
+        {% endfor %}<!--for終了-->
         </thead>
     </table>
     </div></div>
 </div>
+<!--endblock content する-->
 {% endblock content %}

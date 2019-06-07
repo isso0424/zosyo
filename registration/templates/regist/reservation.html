@@ -1,16 +1,19 @@
+<!--base.htmlをもととして使うための宣言-->
 {% extends "base.html" %}
+<!--変化させるタイトル-->
 {% block title%}
 予約確認ページ
 {% endblock title%}
+<!--base.htmlの対応部分に入れるための block content する-->
 {% block content%}
 <div>
     <h1>蔵書予約確認ページ</h1>
+    <!--こんなふうにrenderから渡された値を使える-->
     <p>「{{ reser_book.wtr }}」を次に借りるための予約をしますか?</p>
-    <form action="" method="post">
-        {% csrf_token %}
+    <form action="" method="post"><!--methodはpostに-->
+        {% csrf_token %}<!--formつくるときいれないとエラー吐く-->
   <input type="submit" value="はい" name="yes">
   <input type="submit" value="いいえ" name="no">
-
 </form>
 </div>
-{% endblock content %}
+{% endblock content %}<!--endblock content する-->

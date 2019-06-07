@@ -1,13 +1,18 @@
+<!--base.htmlをもととして使うための宣言-->
 {% extends "base.html" %}
+<!--変化させるタイトル-->
 {% block title%}
 ホーム
 {% endblock title%}
+<!--base.htmlの対応部分に入れるための block content する-->
 {% block content%}
+<!--しばらくTDNhtml-->
 <div>
-<h2 class="name" style="width: 285px;">蔵書管理システム ホーム</h1></div>
+<h2 class="name" style="width: 285px;">蔵書管理システム ホーム</h2></div>
 <div class="naraberu">
     <div class="tablese">
         <table border="1" class="table">
+            <!--messages に値が入っていたらTrue-->
                 {% if messages %}
             <h3 class="hey">貸出中の本</h3>
             <thead>
@@ -19,6 +24,7 @@
             </tr>
             </thead>
             <thead>
+            <!--renderで渡された辞書をforに入れて使う-->
             {% for regist in messages %}
             <tr>
                 <th>
@@ -34,16 +40,17 @@
                     {{regist.day}}
                 </th>
             </tr>
-            {% endfor %}
+            {% endfor %}<!--for終了-->
             </thead>
-            {% endif %}
-            {% if not messages %}
+            {% endif %}<!--if終了-->
+            {% if not messages %}<!--messagesが空ならTrue-->
             <h4>貸出中の本はありません</h4>
-            {% endif%}
+            {% endif%}<!--if終了-->
         </table>
     </div>
     <div class="tablese">
         <table border="1" class="table">
+            <!--nextになにか値が入っていたらTrue-->
             {% if next  %}
             <h4 class="hey">貸出予約リスト</h4>
             <thead>
@@ -54,20 +61,21 @@
             </tr>
             </thead>
             <thead>
+            <!--renderで渡された辞書をforに入れて使う-->
             {% for regist in next %}
             <tr>
                 <th>{{ regist.book }}</th>
                 <th>{{ regist.who_want }}</th>
                 <th>{{ regist.status }}</th>
             </tr>
-            {% endfor %}
+            {% endfor %}<!--for終了-->
             </thead>
-            {% endif %}
-            {% if not next %}
+            {% endif %}<!--if終了-->
+            {% if not next %}<!--予約がなければTrue-->
             <h4>予約中の本はありません</h4>
-            {% endif%}
+            {% endif%}<!--if終了-->
         </table>
     </div>
     
 </div>
-    {% endblock content%}
+    {% endblock content%}<!--endblock content する-->

@@ -1,18 +1,22 @@
+<!--base.htmlをもととして使うための宣言-->
 {% extends "base.html" %}
+<!--変化させるタイトル-->
 {% block title%}
 蔵書返却ページ
 {% endblock title%}
+<!--base.htmlの対応部分に入れるための block content する-->
 {% block content %}
 <h2 class="name" style="width: 178px">蔵書返却ページ</h2><div><div>
 <table class=form>
-<form action="" method="POST">
-    {% csrf_token %}
+<form action="" method="POST"><!--methodはpostに-->
+    {% csrf_token %}<!--formつくるときいれないとエラー吐く-->
     <tbody>
-        <tr>
+        <tr><!--viewで定義したformのなかのbookを使う-->
+            <!--.labelはform.pyで定義したlabelをhtmlに出力する-->
             <td>{{form.book.label}}</td>
             <td>{{form.book}}</td>
         </tr>
     </tbody>
     <tr><td><input type="submit" value="返す"></td></tr>
 </form></table></div>
-{% endblock content %}
+{% endblock content %}<!--endblock content する-->
