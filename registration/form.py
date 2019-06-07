@@ -1,12 +1,22 @@
 from django import forms
 
 
+# formをまとめてあるファイル
+# 貸出登録form
 class RegistFrom(forms.Form):
+    # メアド用のform
+    # charfieldは文字列を受け取るって意味
     mail = forms.CharField(
+        # formについてるコメント
         label="メールアドレスを入力",
+        # formが必須かどうか
         required=True,
+        # テキストボックス
         widget=forms.TextInput(),
-        max_length=100)
+        # 最大の長さ
+        max_length=100
+    )
+    # 1度説明したら割愛
     user = forms.CharField(
         label="名前を入力",
         required=True,
@@ -21,6 +31,7 @@ class RegistFrom(forms.Form):
     )
 
 
+# 蔵書検索form
 class Book_searchForm(forms.Form):
     books_search = forms.CharField(
         label="蔵書検索欄",
@@ -30,6 +41,7 @@ class Book_searchForm(forms.Form):
     )
 
 
+# 返却用form
 class ReturForm(forms.Form):
     book = forms.CharField(
         label='返す本の名前',
@@ -39,6 +51,7 @@ class ReturForm(forms.Form):
     )
 
 
+# 予約用form
 class Who_want(forms.Form):
     regist = forms.CharField(
         required=True,
@@ -47,6 +60,7 @@ class Who_want(forms.Form):
     )
 
 
+# 蔵書登録form
 class TourokuForm(forms.Form):
     book = forms.CharField(
         required=True,
