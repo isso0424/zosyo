@@ -8,6 +8,7 @@
     padding: 10px;
     margin: auto;
     overflow: hidden;
+    border-bottom: 1px solid #000;
 }
 body{
     margin: 0px;
@@ -36,6 +37,7 @@ body{
 .table{
     background-color: wheat;
     width: auto;
+    float: top;
 }
 .name_home{
     float: top !important;

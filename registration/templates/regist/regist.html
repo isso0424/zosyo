@@ -37,6 +37,40 @@
     </tr>
 </form>
 </table>
-
+<div>
+    <form action="" method="post">
+    <table class="form">
+        {% csrf_token %}
+        <tbody>
+            <tr>
+                <td>
+                    {{ form2.books_search.label }}
+                    {{ form2.books_search }}
+                </td>
+                <td><input type="submit" value="検索"></td>
+            </tr>
+        {% if search_error %}
+        <p>!!!error:その文字列を含む本はデータベースにありません!!!</p>
+        {% endif %}
+        </tbody>
+    </table>
+    </form>
+</div>
+<div>
+    {% if search %}
+    <table border="1" class = "table">
+        <h4>検索リスト</h4>
+        <tbody>
+                {% for search in search_result %}
+            <tr>
+                <th>
+                    {{ search.search_book }}
+                </th>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+</div>
 </div>
 {% endblock content %}

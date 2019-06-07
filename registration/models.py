@@ -14,3 +14,7 @@ class Registration(models.Model):
 class Reservation(models.Model):
     wtr = models.CharField(max_length=30, null=True)
     who = models.CharField(max_length=20, null=True)
+
+
+class Search(models.Model):
+    search_book = models.CharField(max_length=20, null=True)

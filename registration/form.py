@@ -11,12 +11,22 @@ class RegistFrom(forms.Form):
         label="名前を入力",
         required=True,
         widget=forms.TextInput(),
-        max_length=20)
+        max_length=20
+    )
     book = forms.CharField(
         label='借りる本の名前',
         required=True,
         widget=forms.TextInput(),
         max_length=100
+    )
+
+
+class Book_searchForm(forms.Form):
+    books_search = forms.CharField(
+        label="蔵書検索欄",
+        required=True,
+        widget=forms.TextInput(),
+        max_length=20
     )
 
 
