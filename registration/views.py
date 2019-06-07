@@ -6,9 +6,12 @@ from django.utils import timezone
 
 # Create your views here.
 ########################################################
-# dはhtmlに送る辞書
+# dはhtmlに送る辞書                                    #
+# formはforms.pyを参照                                 #
+# データベースはmodels.pyを参照                        #
+# ページを表示,またはsubmitされたときに関数を実行      #
+########################################################
 # 貸出登録ページのコントローラー
-# ページを表示,またはsubmitされたときに関数を実行
 def index(request):
     # 予約用のデータベースに値が残ってたら全部消す
     if Reservation.objects.all().exists():
@@ -59,6 +62,7 @@ def index(request):
                 return redirect('regist:regist')
         # 本が貸出中で予約なしなら予約の催促をする
         elif Registration.objects.filter(book=regist.book, status='貸出中', who_want='なし').exists():
+            # 本とユーザー名を予約用のデータベースに登録する
             Reservation.objects.create(wtr=regist.book, who=regist.user)
             # 予約確認ページに飛ぶ
             return redirect('regist:reservation')
@@ -102,6 +106,7 @@ def index(request):
     return render(request, 'regist/regist.html', d)
 
 
+# トップページのコントローラー
 def home(request):
     # 'messages'に貸出中の本を,'next'に予約されている本の一覧を表示
     d = {'messages': Registration.objects.filter(status="貸出中"),
@@ -110,49 +115,70 @@ def home(request):
     return render(request, 'regist/home.html', d)
 
 
+# 返却ページのコントローラ－
 def retur(request):
+    # formは返却用のReturFormを使用
     form = ReturForm(request.POST or None)
+    # formに値が入力されていたらTrue
     if form.is_valid():
+        # どのデータベースに代入するかわかりやすいようにregistにRegistrationを代入
         regist = Registration()
+        # ('book')にform.cleaned_date.getで本を代入
         regist.book = form.cleaned_data.get('book')
+        # 入力された本があるかどうか判定
         if Registration.objects.filter(book=regist.book).exists():
+            # 以下の4つは初期化用
+            regist.mail = 'なし'
+            regist.user = 'なし'
+            regist.day = 'なし'
+            regist.status = "ラボ内"
+            # 予約されてるか判定
             if Registration.objects.filter(book=regist.book).exclude(who_want='なし').exists():
+                # 予約してる人を取得
                 regist.who_want = Registration.objects.filter(book=regist.book).values('who_want')[0]
+                # その本のデータベースの削除
                 Registration.objects.filter(book=regist.book).delete()
-                regist.mail = 'なし'
-                regist.user = 'なし'
-                regist.day = 0
-                regist.status = "ラボ内"
+                # データベースの作り直し
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                             status=regist.status, mail=regist.mail, who_want=regist.who_want['who_want'])
+            # 予約されてない場合の操作
             else:
+                # その本のデータベースの削除
                 Registration.objects.filter(book=regist.book).delete()
-                regist.mail = 'なし'
-                regist.user = 'なし'
-                regist.day = 0
-                regist.status = "ラボ内"
+                # データベースの作り直し
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                             status=regist.status, mail=regist.mail, who_want='なし')
+            # どっちにせよ返却したあとリダイレクトしてフォームをリセット
             return redirect('regist:retur')
-
+    # おまじない
     return render(request, 'regist/retur.html', {'form': form})
 
 
+# 蔵書一覧の関数
 def book_list(request):
+    # ラボ内にある本をIn_labとしてhtmlで使用
     d = {'In_lab': Registration.objects.filter(status="ラボ内")}
+    # おまじない
     return render(request, 'regist/book_list.html', d)
 
 
+# 蔵書登録ページ
 def touroku(request):
+    # formは登録用のTourokuFormを使用
     form = TourokuForm(request.POST or None)
+    # フォームが埋まってるときにsubmitされたらTrue
     if form.is_valid():
+        # 上の方からずっとやってるおまじない
         regist = Registration()
+        # おまじない
         regist.book = form.cleaned_data.get('book')
-        regist.status = 'ラボ内'
+        # 本がデータベースになければ分岐
         if not Registration.objects.filter(book=regist.book).exists():
+            # いつもどおりにcreate
+            # それぞれのステータスは初期化されたものを使う
             Registration.objects.create(
                 book=regist.book,
-                status=regist.status,
+                status='ラボ内',
                 day='なし',
                 mail='なし',
                 user='なし',
@@ -162,15 +188,23 @@ def touroku(request):
     return render(request, 'regist/touroku.html', {'form': form})
 
 
+# 予約催促用
 def reservation(request):
+    # formは予約ページのフォームのWho_wantを使用
     form = Who_want(request.POST or None)
+    # indexの予約の分岐でぶち込まれたユーザー名と予約する本を変数にぶち込む
     wt = Reservation.objects.filter().values('wtr')[0]
     wh = Reservation.objects.filter().values('who')[0]
+    # submitボタンを押した際に分岐
     if request.method == 'POST':
+        # yesボタンを押したとき
         if 'yes' in request.POST:
-            print(wt)
+            # aに予約する本のRegistrationデータベースの辞書を代入
             a = Registration.objects.filter(book=wt['wtr']).values()[0]
+            # 上で代入したもとのデータベースを削除
             Registration.objects.filter(book=wt['wtr']).delete()
+            # 代わりにwho_wantが代入されたデータベースをcreate
+            # wt['wtr`]の意味がわからなかったら辞書について学び直せ
             Registration.objects.create(
                 book=wt['wtr'],
                 status=a['status'],
@@ -179,11 +213,17 @@ def reservation(request):
                 who_want=wh['who'],
                 day=a['day'],
             )
+            # 予約用データベースの削除
             Reservation.objects.all().delete()
+            # ホームに戻る
             return redirect('regist:home')
+        # noボタンを押したとき
         elif 'no' in request.POST:
+            # 何もせずにホームに戻る
             return redirect('regist:home')
+    # dに予約する本とformをぶちこむ
     d = {'reser_book': wt,
          'form': form,
          }
+    # おまじない
     return render(request, 'regist/reservation.html', d)
