@@ -73,7 +73,7 @@ def index(request):
         else:
             d = {'form': form, 'error': True, 'form2': form2}
     # 検索用フォームに値が入力されているかを判定
-    if form2.is_valid():
+    elif form2.is_valid():
         # 入力された本を.cleaned_data.get('books_search')してbooks_searchに挿入
         search_books = form2.cleaned_data.get('books_search')
         # 検索ワードをリスト化
@@ -192,8 +192,12 @@ def retur(request):
                                             status=regist.status, mail=regist.mail, who_want='なし')
             # どっちにせよ返却したあとリダイレクトしてフォームをリセット
             return redirect('regist:retur')
+        else:
+            d = {'form': form, 'error': True}
+    else:
+        d = {'form': form}
     # おまじない
-    return render(request, 'regist/retur.html', {'form': form})
+    return render(request, 'regist/retur.html', d)
 
 
 # 蔵書一覧の関数
@@ -227,7 +231,11 @@ def touroku(request):
                 who_want='なし'
             )
             return redirect('regist:touroku')
-    return render(request, 'regist/touroku.html', {'form': form})
+        else:
+            d = {'form': form, 'error': True}
+    else:
+        d = {'form': form}
+    return render(request, 'regist/touroku.html', d)
 
 
 # 予約催促用

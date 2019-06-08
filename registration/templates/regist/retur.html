@@ -6,6 +6,9 @@
 {% endblock title%}
 <!--base.htmlの対応部分に入れるための block content する-->
 {% block content %}
+{% if error %}
+<script>alert('その本は貸し出されていません')</script>
+{% endif %}
 <h2 class="name" style="width: 178px">蔵書返却ページ</h2><div><div>
 <table class=form>
 <form action="" method="POST"><!--methodはpostに-->

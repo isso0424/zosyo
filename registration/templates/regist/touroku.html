@@ -6,6 +6,9 @@
 {% endblock title %}
 <!--base.htmlの対応部分に入れるための block content する-->
 {% block content %}
+{% if error %}
+<script>alert('その本は既に登録されています')</script>
+{% endif %}
 <h2 class="name" style="width: 178px">蔵書登録ページ</h2>
 <table class="form">
     <form method="post"><!--methodをpostに-->

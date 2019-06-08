@@ -21,10 +21,10 @@
         {{ form.book }}</td>
         </tr>
         {% if error %}
-        <tr><td class="error">!!!error : その本は存在しません!!!</td></tr>
+        <script>alert('error:その本は存在しません')</script>
         {% endif %}
         {% if error_resrva %}
-        <tr><td class="error">!!!error : その本は予約されています !!!</td></tr>
+        <script>alert('error : その本は予約されています')</script>
         {% endif %}
         <tr>
             <td>
@@ -60,7 +60,7 @@
                 <td><input type="submit" value="検索"></td>
             </tr>
         {% if search_error %}
-        <p>!!!error:その文字列を含む本はデータベースにありません!!!</p>
+        <script>alert("error:その文字列を含む本はデータベースに存在しません")</script>
         {% endif %}
         </tbody>
     </form>
