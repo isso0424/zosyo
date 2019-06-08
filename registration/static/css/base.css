@@ -35,7 +35,7 @@ body{
     padding: 5px
 }
 .table{
-    background-color: wheat;
+    background-color: wheat !important;
     width: auto;
     float: top;
 }
@@ -69,7 +69,7 @@ a{
     border: 5px;
 }
 .tablese{
-    background-color: #ffffdc !important;
+    background-color: #ffffdc;
     margin:10px;
     border-radius: 10px;
     padding: 3px
