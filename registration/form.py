@@ -39,6 +39,16 @@ class Book_searchForm(forms.Form):
         widget=forms.TextInput(),
         max_length=20
     )
+    choice = forms.ChoiceField(
+        label="検索方法選択",
+        widget=forms.RadioSelect,
+        choices=(
+            (1, 'or'),
+            (0, 'and'),
+        ),
+        initial=1,
+        required=True
+    )
 
 
 # 返却用form

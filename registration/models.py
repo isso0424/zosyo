@@ -34,3 +34,4 @@ class Reservation(models.Model):
 class Search(models.Model):
     # 検索結果用データベース
     search_book = models.CharField(max_length=20, null=True)
+    TF = models.CharField(max_length=5, null=True)

@@ -9,7 +9,8 @@
 <!--
 これにコメントアウトするのは心が折れたからほかのファイル参考にして、どうぞ
 -->
-<h2 class="name" style="width: 180px">貸出登録ページ</h2><div>
+<h2 class="name" style="width: 180px">貸出登録ページ</h2>
+<div style="flex-direction: column">
 <table class=form>
 <form action="" method="POST">
     {% csrf_token %}
@@ -37,17 +38,20 @@
         </tr>
     </tbody>
     <tr>
-        <td><input type="submit" value="借りる">
-
-        </td>
+        <td><input type="submit" value="借りる"></td>
     </tr>
 </form>
 </table>
-<div>
-    <form action="" method="post">
     <table class="form">
+    <form action="" method="post">
         {% csrf_token %}
         <tbody>
+            <tr>
+                <td>
+                    {{ form2.choice.label }}
+                    {{ form2.choice }}
+                </td>
+            </tr>
             <tr>
                 <td>
                     {{ form2.books_search.label }}
@@ -59,15 +63,14 @@
         <p>!!!error:その文字列を含む本はデータベースにありません!!!</p>
         {% endif %}
         </tbody>
-    </table>
     </form>
-</div>
-<div>
+    </table>
     {% if search %}
-    <table border="1" class = "table">
-        <h4>検索リスト</h4>
+    <div class="hey">
+        <table border="1" class = "table tablese">
         <tbody>
-                {% for search in search_result %}
+            <caption>検索結果</caption>
+        {% for search in search_result %}
             <tr>
                 <th>
                     {{ search.search_book }}
@@ -76,7 +79,7 @@
             </tr>
         </tbody>
     </table>
-    {% endif %}
 </div>
+    {% endif %}
 </div>
 {% endblock content %}

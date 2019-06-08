@@ -76,6 +76,8 @@ def index(request):
     if form2.is_valid():
         # 入力された本を.cleaned_data.get('books_search')してbooks_searchに挿入
         search_books = form2.cleaned_data.get('books_search')
+        # 検索ワードをリスト化
+        search_words = search_books.split()
         # 変数を初期化
         ok = False
         # もし検索履歴が残ってたら削除
@@ -85,14 +87,54 @@ def index(request):
         for book_date in Registration.objects.all().values('book'):
             # {'book': 本の名前}の本の名前をbook_listsに代入
             for book_lists in book_date.values():
-                # book_listsの本に検索ワードが含まれているか判定
-                if search_books in book_lists:
+                # book_listsの本に検索ワードの1番目が含まれているか判定
+                if search_words[0] in book_lists:
                     # 検索ワードが含まれていた場合Search(データベース)に本の名前をぶち込む
                     Search.objects.create(
                         search_book=book_lists,
                     )
                     # okをTrueにすることで次のif文でdの形を検索結果付きに変更
                     ok = True
+        # さっき検索したワードは削除する
+        del search_words[0]
+        choice = form2.cleaned_data['choice']
+        print(choice)
+        # 残ったワードにさっきやった処理をかけていく
+        a = False
+        # and検索の場合
+        if choice == "0":
+            for search in search_words:
+                a = True
+                for book_date in Search.objects.all().values('search_book'):
+                    for book_lists in book_date.values():
+                        # book_listsの本に検索ワードのn番目が含まれているか判定
+                        if search in book_lists:
+                            # 検索ワードが含まれていた場合pass
+                            pass
+                        else:
+                            # 含まれていない本は除外
+                            Search.objects.filter(search_book=book_lists).delete()
+        # or検索の場合
+        print(search_words)
+        if choice == "1":
+            for search_b in search_words:
+                for book_date in Registration.objects.all().values('book'):
+                    # {'book': 本の名前}の本の名前をbook_listsに代入
+                    for book_lists in book_date.values():
+                        # book_listsの本に検索ワードの1番目が含まれているか判定
+                        if search_b in book_lists:
+                            # 検索ワードが含まれていた場合Search(データベース)に本の名前をぶち込む
+                            if Search.objects.filter(search_book=book_lists):
+                                pass
+                            else:
+                                Search.objects.create(
+                                    search_book=book_lists,
+                                )
+                            # okをTrueにすることで次のif文でdの形を検索結果付きに変更
+                            ok = True
+        if a:
+            if not Search.objects.all().exists():
+                ok = False
         if ok:
             # searchにTrueを送り、htmlのif文に利用,search_resultにすべての検索結果をぶち込む
             d = {'form': form, 'form2': form2, 'search': True, 'search_result': Search.objects.all()}
