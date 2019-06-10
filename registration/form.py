@@ -37,7 +37,7 @@ class Book_searchForm(forms.Form):
         label="蔵書検索欄",
         required=True,
         widget=forms.TextInput(),
-        max_length=20
+        max_length=100
     )
     choice = forms.ChoiceField(
         label="検索方法選択",

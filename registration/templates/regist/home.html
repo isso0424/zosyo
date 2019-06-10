@@ -27,18 +27,10 @@
             <!--renderで渡された辞書をforに入れて使う-->
             {% for regist in messages %}
             <tr>
-                <th>
-                    {{ regist.book }}
-                </th>
-                <th>
-                    {{ regist.user}}
-                </th>
-                <th>
-                    {{regist.mail}}
-                </th>
-                <th>
-                    {{regist.day}}
-                </th>
+                <th>{{ regist.book }}</th>
+                <th>{{ regist.user }}</th>
+                <th>{{ regist.mail }}</th>
+                <th>{{ regist.day }}</th>
             </tr>
             {% endfor %}<!--for終了-->
             </thead>

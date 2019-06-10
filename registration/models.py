@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 
 
 # データベースのモデルを作成するクラス達
@@ -35,3 +36,11 @@ class Search(models.Model):
     # 検索結果用データベース
     search_book = models.CharField(max_length=20, null=True)
     TF = models.CharField(max_length=5, null=True)
+
+
+class RegistAdmin(admin.ModelAdmin):
+    list_display = ('book', )
+    fields = ('book', )
+
+    def regist(self, instance):
+        return instance
