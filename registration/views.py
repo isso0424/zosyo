@@ -108,7 +108,6 @@ def index(request):
         # さっき検索したワードは削除する
         del search_words[0]
         choice = form2.cleaned_data['choice']
-        print(choice)
         # 残ったワードにさっきやった処理をかけていく
         a = False
         # and検索の場合
@@ -125,7 +124,6 @@ def index(request):
                             # 含まれていない本は除外
                             Search.objects.filter(search_book=book_lists).delete()
         # or検索の場合
-        print(search_words)
         if choice == "1":
             for search_b in search_words:
                 for book_date in Registration.objects.all().values('book'):
@@ -162,7 +160,6 @@ def index(request):
 def home(request):
     if request.user.is_authenticated:
         username = str(request.user)
-        print(request.user.email)
     else:
         return render(request, 'regist/home.html', {
             'messages': Registration.objects.filter(status="貸出中"),
