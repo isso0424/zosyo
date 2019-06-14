@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
-from .form import RegistFrom, ReturForm, Who_want, TourokuForm, Book_searchForm
+from django.shortcuts import render, redirect, HttpResponseRedirect
+from .form import RegistFrom, ReturForm, Who_want, TourokuForm, Book_searchForm, SignUpForm, LoginForm
 from .models import Registration, Reservation, Search
 from django.utils import timezone
+from django.contrib.auth import authenticate, login, logout
+from django import http
+from django.contrib import messages
 
 
 # Create your views here.
@@ -13,6 +16,13 @@ from django.utils import timezone
 ########################################################
 # 貸出登録ページのコントローラー
 def index(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+    else:
+        return render(request, 'regist/non_login.html', {
+            'messages': Registration.objects.filter(status="貸出中"),
+            'next': Registration.objects.exclude(who_want='なし'),
+            'user': None})
     # 予約用のデータベースに値が残ってたら全部消す
     if Reservation.objects.all().exists():
         Reservation.objects.all().delete()
@@ -30,8 +40,8 @@ def index(request):
         regist.day = str(day).split(' ')[0]
         # book,user,mailはformに入力されている内容をform.cleaned_data.get('formの名前')で取得
         regist.book = form.cleaned_data.get('book')
-        regist.user = form.cleaned_data.get('user')
-        regist.mail = form.cleaned_data.get('mail')
+        regist.user = username
+        regist.mail = request.user.email
         # 下２つはリセット用
         regist.status = "貸出中"
         # 入力された本のタイトルがデータベースにあり、借りられていないか判定
@@ -50,7 +60,7 @@ def index(request):
                     return redirect('regist:regist')
                 # 別な人が借りようとしたらｶﾘﾚﾅｲﾖ-ってことを出力
                 else:
-                    d = {'form': form, 'error_reseva': True, 'form2': form2}
+                    d = {'form': form, 'error_reseva': True, 'form2': form2, 'user': username}
             # 予約されてなければそのまま借りる
             else:
                 regist.who_want = 'なし'
@@ -68,10 +78,10 @@ def index(request):
             return redirect('regist:reservation')
         # 予約されてるならそのことを出力
         elif Registration.objects.filter(book=regist.book, status='貸出中').exists():
-            d = {'form': form, 'error_resrva': True, 'form2': form2}
+            d = {'form': form, 'error_resrva': True, 'form2': form2, 'user': username}
         # ここまで来たら本がないってエラー出す
         else:
-            d = {'form': form, 'error': True, 'form2': form2}
+            d = {'form': form, 'error': True, 'form2': form2, 'user': username}
     # 検索用フォームに値が入力されているかを判定
     elif form2.is_valid():
         # 入力された本を.cleaned_data.get('books_search')してbooks_searchに挿入
@@ -137,28 +147,43 @@ def index(request):
                 ok = False
         if ok:
             # searchにTrueを送り、htmlのif文に利用,search_resultにすべての検索結果をぶち込む
-            d = {'form': form, 'form2': form2, 'search': True, 'search_result': Search.objects.all()}
+            d = {'form': form, 'form2': form2, 'search': True, 'search_result': Search.objects.all(), 'user': username}
         # 検索ワードに対応するものがなければその旨をsearch_errorでhtmlに反映
         else:
-            d = {'form': form, 'form2': form2, 'search_error': True}
+            d = {'form': form, 'form2': form2, 'search_error': True, 'user': username}
     # ページ読み込み時に表示するもの
     else:
-        d = {'form': form, 'form2': form2}
+        d = {'form': form, 'form2': form2, 'user': username}
     # htmlにdをぶちこんでhtmlを操作
     return render(request, 'regist/regist.html', d)
 
 
 # トップページのコントローラー
 def home(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+        print(request.user.email)
+    else:
+        return render(request, 'regist/home.html', {
+            'messages': Registration.objects.filter(status="貸出中"),
+            'next': Registration.objects.exclude(who_want='なし'),
+            'user': None})
     # 'messages'に貸出中の本を,'next'に予約されている本の一覧を表示
     d = {'messages': Registration.objects.filter(status="貸出中"),
-         'next': Registration.objects.exclude(who_want='なし')}
+         'next': Registration.objects.exclude(who_want='なし'),
+         'user': username}
     # indexといっしょ
     return render(request, 'regist/home.html', d)
 
 
 # 返却ページのコントローラ－
 def retur(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+    else:
+        return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
+         'next': Registration.objects.exclude(who_want='なし'),
+         'user': None})
     # formは返却用のReturFormを使用
     form = ReturForm(request.POST or None)
     # formに値が入力されていたらTrue
@@ -182,7 +207,8 @@ def retur(request):
                 Registration.objects.filter(book=regist.book).delete()
                 # データベースの作り直し
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
-                                            status=regist.status, mail=regist.mail, who_want=regist.who_want['who_want'])
+                                            status=regist.status, mail=regist.mail,
+                                            who_want=regist.who_want['who_want'])
             # 予約されてない場合の操作
             else:
                 # その本のデータベースの削除
@@ -193,23 +219,36 @@ def retur(request):
             # どっちにせよ返却したあとリダイレクトしてフォームをリセット
             return redirect('regist:retur')
         else:
-            d = {'form': form, 'error': True}
+            d = {'form': form, 'error': True, "user": username, 'borrow': True}
+    elif Registration.objects.filter(user=username).exists():
+        d = {'form': form, 'user': username, 'borrow': True,
+             'borrowing': Registration.objects.filter(user=username)}
     else:
-        d = {'form': form}
+        d = {'form': form, "user": username}
     # おまじない
     return render(request, 'regist/retur.html', d)
 
 
 # 蔵書一覧の関数
 def book_list(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
     # ラボ内にある本をIn_labとしてhtmlで使用
-    d = {'In_lab': Registration.objects.filter(status="ラボ内")}
+        d = {'In_lab': Registration.objects.filter(status="ラボ内"), "user": username}
+    else:
+        d = {'In_lab': Registration.objects.filter(status="ラボ内")}
     # おまじない
     return render(request, 'regist/book_list.html', d)
 
 
 # 蔵書登録ページ
 def touroku(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+    else:
+        return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
+         'next': Registration.objects.exclude(who_want='なし'),
+         'user': None})
     # formは登録用のTourokuFormを使用
     form = TourokuForm(request.POST or None)
     # フォームが埋まってるときにsubmitされたらTrue
@@ -232,14 +271,20 @@ def touroku(request):
             )
             return redirect('regist:touroku')
         else:
-            d = {'form': form, 'error': True}
+            d = {'form': form, 'error': True, "user": username}
     else:
-        d = {'form': form}
+        d = {'form': form, "user": username}
     return render(request, 'regist/touroku.html', d)
 
 
 # 予約催促用
 def reservation(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+    else:
+        return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
+         'next': Registration.objects.exclude(who_want='なし'),
+         'user': None})
     # formは予約ページのフォームのWho_wantを使用
     form = Who_want(request.POST or None)
     # indexの予約の分岐でぶち込まれたユーザー名と予約する本を変数にぶち込む
@@ -274,6 +319,19 @@ def reservation(request):
     # dに予約する本とformをぶちこむ
     d = {'reser_book': wt,
          'form': form,
+         "user": username
          }
     # おまじない
     return render(request, 'regist/reservation.html', d)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('regist:home')
+    else:
+        form = SignUpForm()
+    context = {'form': form}
+    return render(request, 'regist/signup.html', context)

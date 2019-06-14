@@ -13,12 +13,19 @@
 <body>
 <!--こっからいつもの-->
     <header id = header>
-    <h1><a id = "title" href="home" style="color:#000;text-decoration:none">蔵書管理システム</a></h1>
+    <h1><a id = "title" href="/registration/home" style="color:#000;text-decoration:none">蔵書管理システム</a></h1>
     <ul>
     <li><a href="/registration/regist" style="color:#000;text-decoration:none" class = "menu">貸出登録ページ</a></li>
     <li><a href="/registration/retur" class="menu" style="color:#000;text-decoration:none">返却用ページ</a></li>
-    <li><a href="/registration/book_list" class="menu" style="color:#000;text-decoration:none">蔵書リスト</a></li>
-    <li><a href="/registration/touroku" class="menu" style="color:#000;text-decoration:none">蔵書登録</a></li></ul></header>
+    <li><a href="/registration/book_list" class="menu" style="color:#000;text-decoration:none">ラボ内蔵書リスト</a></li>
+    <li><a href="/registration/touroku" class="menu" style="color:#000;text-decoration:none">蔵書登録</a></li></ul>
+        {% if not request.user.is_authenticated %}
+        <div style="float:right !important;padding:10px;"><a href="/registration/login">ログイン</a><a>または</a><a href="/registration/signup">登録</a></div>
+    {% else %}
+        <a  style="float:right !important;padding:10px;color:#000;text-decoration:none;" href="/registration/logout"><img style="width:20px; height:20px;" src="{% static 'pictures/logout.png' %}"></img>ログアウト</a>
+    <p style="float:right !important;padding:10px;">ようこそ{{user}}さん</p>
+    {% endif %}
+        </header>
     <div class = "conteiner" id = conteiner>
         <!--この下をページごとに変化させるためにblock contentを使う contentにコンテンツを入れる-->
     {% block content %}

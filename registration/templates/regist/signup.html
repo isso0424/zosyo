@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>登録ページ.</h1>
+<form action="" method="post" class="form">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="登録">
+</form><div class="form">
+<p>登録済みなら</p>
+    <p><a href= "{% url 'regist:login' %}">ログイン</a></p></div>
+{% endblock content %}

@@ -1,5 +1,7 @@
 from django.conf.urls import url
+from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 # アプリ名を定義
 app_name = "regist"
 # urlの定義
@@ -15,5 +17,8 @@ urlpatterns = (
     # 蔵書登録ページのurl
     url(r'^touroku', views.touroku, name='touroku'),
     # 予約確認ページのurl
-    url(r'^reservation', views.reservation, name='reservation')
+    url(r'^reservation', views.reservation, name='reservation'),
+    url('signup/', views.signup, name='signup'),
+    path('login/', auth_views.LoginView.as_view(template_name='regist/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 )

@@ -1,4 +1,49 @@
 from django import forms
+from django.contrib.auth.models import User
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput, label="ユーザー名")
+    password = forms.CharField(widget=forms.PasswordInput, label="パスワード")
+
+
+class SignUpForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput, label="ユーザー名")
+    enter_password = forms.CharField(widget=forms.PasswordInput, label="パスワード")
+    retype_password = forms.CharField(widget=forms.PasswordInput, label="パスワード(再入力)")
+    email = forms.EmailField(label="メールアドレス")
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('そのユーザー名は既に使用されています')
+        return username
+
+    def clean_enter_password(self):
+        password = self.cleaned_data.get('enter_password')
+        if len(password) < 5:
+            raise forms.ValidationError('パスワードは5文字以上です')
+        return password
+
+    def e_mail(self):
+        e_mail = self.cleaned_data.get('email')
+        if User.objects.filter(email=e_mail).exists():
+            raise forms.ValidationError('そのメールアドレスは既に使用されています')
+
+    def clean(self):
+        super(SignUpForm, self).clean()
+        password = self.cleaned_data.get('enter_password')
+        retyped = self.cleaned_data.get('retype_password')
+        if password and retyped and (password != retyped):
+            self.add_error('retype_password', 'パスワードが一致しませんでした')
+
+    def save(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('enter_password')
+        e_mail = self.cleaned_data.get('email')
+        new_user = User.objects.create_user(username=username, email=e_mail)
+        new_user.set_password(password)
+        new_user.save()
 
 
 # formをまとめてあるファイル
@@ -6,23 +51,6 @@ from django import forms
 class RegistFrom(forms.Form):
     # メアド用のform
     # charfieldは文字列を受け取るって意味
-    mail = forms.CharField(
-        # formについてるコメント
-        label="メールアドレスを入力",
-        # formが必須かどうか
-        required=True,
-        # テキストボックス
-        widget=forms.TextInput(),
-        # 最大の長さ
-        max_length=100
-    )
-    # 1度説明したら割愛
-    user = forms.CharField(
-        label="名前を入力",
-        required=True,
-        widget=forms.TextInput(),
-        max_length=20
-    )
     book = forms.CharField(
         label='借りる本の名前',
         required=True,

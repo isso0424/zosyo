@@ -10,6 +10,7 @@
 <script>alert('その本は貸し出されていません')</script>
 {% endif %}
 <h2 class="name" style="width: 178px">蔵書返却ページ</h2><div><div>
+{% if borrow %}
 <table class=form>
 <form action="" method="POST"><!--methodはpostに-->
     {% csrf_token %}<!--formつくるときいれないとエラー吐く-->
@@ -21,5 +22,22 @@
         </tr>
     </tbody>
     <tr><td><input type="submit" value="返す"></td></tr>
-</form></table></div>
+</form></table>
+    <table border="1" class = "table">
+        <tbody>
+        <tr>
+            <th>あなたが現在借りている本</th>
+        </tr>
+        {% for book in borrowing %}
+        <tr>
+            <th>{{ book.book }}</th>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% if not borrow %}
+<p class="form">現在あなたは本を借りていません</p>
+{% endif %}
+</div>
 {% endblock content %}<!--endblock content する-->
