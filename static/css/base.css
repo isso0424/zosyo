@@ -1,0 +1,91 @@
+{% load static %}
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#header{
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
+    margin: auto;
+    overflow: hidden;
+    border-bottom: 1px solid #000;
+}
+body{
+    margin: 0px;
+    background-image: url({% static 'pictures/zosyo_background.jpg' %});
+    background: brightness(60%);
+}
+.name{
+    float: top !important;
+    background-color: #ffffdc !important;
+    margin:10px !important;
+    background-image: none !important; 
+    height: auto;
+    border-radius: 10px;
+    padding: 3px
+}
+.form{
+    background-color: #ffffdc !important;
+    margin:10px !important;
+    background-image: none !important; 
+    float: left;
+    width: auto !important;
+    height: auto;
+    border-radius: 10px;
+    padding: 5px
+}
+.table{
+    background-color: wheat !important;
+    width: auto;
+    float: top;
+}
+.name_home{
+    float: top !important;
+    background-color: #ffffdc !important;
+    margin:10px !important;
+    background-image: none !important; 
+    height: auto;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+a{
+    float: left !important;
+}
+.menu{
+    padding:10px 20px;
+    float: left;
+    background-image: url(/static/pictures/freebu28_3.gif)
+}
+.hey{
+    background-color: #ffffdc !important;
+    width:auto;
+    padding:5px;
+    border-radius:10px
+}
+.error{
+    font-size:10px;
+}
+.tables{
+    border: 5px;
+}
+.tablese{
+    background-color: #ffffdc;
+    margin:10px;
+    border-radius: 10px;
+    padding: 3px
+    
+}
+.naraberu{
+    display: inline-block;
+}
+li{
+    float: left;
+    list-style-type: none;
+    border: 2px solid #333;
+    margin-left: 5px;
+}
+
+.conteiner{
+    margin-left: 5px
+}

@@ -1,10 +1,7 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect
-from .form import RegistFrom, ReturForm, Who_want, TourokuForm, Book_searchForm, SignUpForm, LoginForm
+from django.shortcuts import render, redirect
+from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm
 from .models import Registration, Reservation, Search
 from django.utils import timezone
-from django.contrib.auth import authenticate, login, logout
-from django import http
-from django.contrib import messages
 
 
 # Create your views here.
@@ -29,7 +26,7 @@ def index(request):
     # formが貸出フォーム
     form = RegistFrom(request.POST or None)
     # form2が蔵書検索フォーム
-    form2 = Book_searchForm(request.POST or None)
+    form2 = Books_SearchForm(request.POST or None)
     # formに値が入力されているか判定
     if form.is_valid():
         import datetime
@@ -179,8 +176,8 @@ def retur(request):
         username = str(request.user)
     else:
         return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
-         'next': Registration.objects.exclude(who_want='なし'),
-         'user': None})
+                                                         'next': Registration.objects.exclude(who_want='なし'),
+                                                         'user': None})
     # formは返却用のReturFormを使用
     form = ReturForm(request.POST or None)
     # formに値が入力されていたらTrue
@@ -244,8 +241,8 @@ def touroku(request):
         username = str(request.user)
     else:
         return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
-         'next': Registration.objects.exclude(who_want='なし'),
-         'user': None})
+                                                         'next': Registration.objects.exclude(who_want='なし'),
+                                                         'user': None})
     # formは登録用のTourokuFormを使用
     form = TourokuForm(request.POST or None)
     # フォームが埋まってるときにsubmitされたらTrue
@@ -280,10 +277,10 @@ def reservation(request):
         username = str(request.user)
     else:
         return render(request, 'regist/non_login.html', {'messages': Registration.objects.filter(status="貸出中"),
-         'next': Registration.objects.exclude(who_want='なし'),
-         'user': None})
+                                                         'next': Registration.objects.exclude(who_want='なし'),
+                                                         'user': None})
     # formは予約ページのフォームのWho_wantを使用
-    form = Who_want(request.POST or None)
+    form = Who_Want(request.POST or None)
     # indexの予約の分岐でぶち込まれたユーザー名と予約する本を変数にぶち込む
     wt = Reservation.objects.filter().values('wtr')[0]
     wh = Reservation.objects.filter().values('who')[0]

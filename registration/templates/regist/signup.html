@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>登録ページ.</h1>
-<form action="" method="post" class="form">
-{% csrf_token %}
-{{ form.as_p }}
+<h1>登録ページ</h1><div class="form">
+<form action="" method="post" class="form" style="width:auto !important;">
+    <table>
+    {% csrf_token %}
+        <tr><td>{{form.username.errors}}</td></tr>
+    <tr><td>
+    {{form.username.label}}
+        {{ form.username }}</td></tr>
+        <tr><td>{{form.enter_password.errors}}</td></tr>
+    <tr><td>
+        {{form.enter_password.label}}
+        {{form.enter_password}}
+    </td></tr>
+        <tr><td>{{form.retype_password.errors}}</td></tr>
+    <tr><td>
+        {{form.retype_password.label}}
+        {{form.retype_password}}
+    </td></tr>
+        <tr><td>{{form.email.errors}}</td></tr>
+        <tr><td>{{form.email.label}}
+        {{form.email}}</td></tr>
+    </table>
 <input type="submit" value="登録">
-</form><div class="form">
-<p>登録済みなら</p>
-    <p><a href= "{% url 'regist:login' %}">ログイン</a></p></div>
+</form>
+    <div>
+<a href= "{% url 'regist:login' %}">ログイン</a></div></div>
 {% endblock content %}

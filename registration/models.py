@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib import admin
 
 
@@ -7,7 +6,7 @@ from django.contrib import admin
 # 蔵書の基本データベース
 class Registration(models.Model):
     # 本の名前を入れる
-    # charfieldは文字列用の型
+    # chaffedは文字列用の型
     book = models.CharField(max_length=100)
     # ユーザー名を入れる
     user = models.CharField(max_length=20)
@@ -42,5 +41,5 @@ class RegistAdmin(admin.ModelAdmin):
     list_display = ('book', )
     fields = ('book', )
 
-    def regist(self, instance):
+    def registration(self, instance):
         return instance

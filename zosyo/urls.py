@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from registration import views as regist_views
+from django.conf.urls import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('registration/', include('registration.urls',namespace="regist")),

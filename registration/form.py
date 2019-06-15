@@ -60,7 +60,7 @@ class RegistFrom(forms.Form):
 
 
 # 蔵書検索form
-class Book_searchForm(forms.Form):
+class Books_SearchForm(forms.Form):
     books_search = forms.CharField(
         label="蔵書検索欄",
         required=True,
@@ -90,7 +90,7 @@ class ReturForm(forms.Form):
 
 
 # 予約用form
-class Who_want(forms.Form):
+class Who_Want(forms.Form):
     regist = forms.CharField(
         required=True,
         widget=forms.TextInput(),
