@@ -19,6 +19,8 @@ urlpatterns = (
     # 予約確認ページのurl
     url(r'^reservation', views.reservation, name='reservation'),
     url('signup/', views.signup, name='signup'),
+    url(r'dis_id/', views.regist_id, name='dis_id'),
     path('login/', auth_views.LoginView.as_view(template_name='regist/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
 )

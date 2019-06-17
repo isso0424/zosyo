@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>ユーザー名、またはパスワードが間違っています.</p>
+{% endif %}
+
+<form method="post" action="" class="form">
+{% csrf_token %}
+    <table>
+    {% csrf_token %}
+        <tr><td>{{form.Discord_ID.errors}}</td></tr>
+<tr>
+    <td>{{ form.Discord_ID.label }}</td>
+    <td>{{ form.Discord_ID }}</td>
+</tr>
+
+    </table>
+
+<input type="submit" value="追加" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}

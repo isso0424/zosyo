@@ -37,6 +37,12 @@ class SignUpForm(forms.Form):
         if password and retyped and (password != retyped):
             self.add_error('retype_password', 'パスワードが一致しませんでした')
 
+    def clean_discord_id(self):
+        dis_id = self.cleaned_data.get('Discord_ID')
+        if User.objects.filter(first_name=dis_id):
+            raise forms.ValidationError('そのIDは既に使用されています')
+        return dis_id
+
     def save(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('enter_password')
