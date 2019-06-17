@@ -17,11 +17,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.utils.functional import curry
 from django.views.defaults import *
-from django.conf import settings
-from registration import views as regist_views
-from django.conf.urls import static
+from django.http import HttpResponse
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('registration/', include('registration.urls',namespace="regist")),
+    path('registration/', include('registration.urls', namespace="regist")),
+    path('accounts/', include('allauth.urls')),
+    path('', lambda request: HttpResponse('インデックス'), name='index'),
 ]
 handler404 = curry(server_error, template_name='base.html')

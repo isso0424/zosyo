@@ -329,3 +329,15 @@ def signup(request):
         form = SignUpForm()
     context = {'form': form}
     return render(request, 'regist/signup.html', context)
+
+
+def regist_id(request):
+    if request.method == 'POST':
+        form = Regist_id(request.POST)
+        if form.is_valid():
+            form.save(request)
+            return redirect('regist:home')
+    else:
+        form = Regist_id()
+    context = {'form': form}
+    return render(request, 'regist/regist_id.html', context)
