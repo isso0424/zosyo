@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm
+from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm, RegistFrom_bot
 from .models import Registration, Reservation, Search
 from django.utils import timezone
-from allauth.socialaccount import models
+from django.contrib.auth.models import User
 
 # Create your views here.
 ########################################################
@@ -157,6 +157,7 @@ def index(request):
 def home(request):
     if request.user.is_authenticated:
         username = str(request.user)
+        print(User.objects.all().values('email'))
     else:
         return render(request, 'regist/home.html', {
             'messages': Registration.objects.filter(status="貸出中"),
@@ -228,9 +229,11 @@ def book_list(request):
     if request.user.is_authenticated:
         username = str(request.user)
     # ラボ内にある本をIn_labとしてhtmlで使用
-        d = {'In_lab': Registration.objects.filter(status="ラボ内"), "user": username}
+        d = {'In_lab': Registration.objects.filter(status="ラボ内"),
+             'can_reser': Registration.objects.filter(status="貸出中", who_want='なし'), "user": username}
     else:
-        d = {'In_lab': Registration.objects.filter(status="ラボ内")}
+        d = {'In_lab': Registration.objects.filter(status="ラボ内"),
+             'can_reser': Registration.objects.filter(status="貸出中", who_want='なし')}
     # おまじない
     return render(request, 'regist/book_list.html', d)
 
@@ -338,3 +341,70 @@ def setting(request):
         return render(request, 'regist/setting.html', d)
     else:
         return redirect('regist:non_login.html')
+
+
+def for_bot(request):
+    # 予約用のデータベースに値が残ってたら全部消す
+    if Reservation.objects.all().exists():
+        Reservation.objects.all().delete()
+    # formが貸出フォーム
+    form = RegistFrom_bot(request.POST or None)
+    # formに値が入力されているか判定
+    if form.is_valid():
+        import datetime
+        # さすがにデータベースをそのまま使うのはやばいと思ってregistとして定義
+        regist = Registration()
+        # dayは扱いがめんどいからstr型に変換
+        day = timezone.datetime.today()
+        regist.day = str(day).split(' ')[0]
+        # book,user,mailはformに入力されている内容をform.cleaned_data.get('formの名前')で取得
+        regist.book = form.cleaned_data.get('book')
+        regist.user = form.cleaned_data.get('user')
+        if User.objects.filter(username=regist.user).exists():
+            return ('regist:home')
+        regist.email = User.objects.filter(username=regist.user).values('email')
+        # 下２つはリセット用
+        regist.status = "貸出中"
+        # 入力された本のタイトルがデータベースにあり、借りられていないか判定
+        if Registration.objects.filter(book=regist.book, status='ラボ内').exists():
+            # 入力された本が予約されているか判定
+            if Registration.objects.filter(book=regist.book).exclude(who_want='なし').exists():
+                # who_wantに入力された本を予約している人を代入
+                regist.who_want = Registration.objects.filter(book=regist.book).values('who_want')[0]
+                # その代入された人が今回借りようとしてる人か判定
+                if regist.who_want['who_want'] == regist.user:
+                    # Trueならその本のデータベースを一回削除して予約者なしにして貸出
+                    Registration.objects.filter(book=regist.book).delete()
+                    Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                                status='貸出中', mail=regist.mail, who_want='なし')
+                    # 貸出したら同じページにリダイレクトしてフォームをリセット
+                    return redirect('regist:regist_bot')
+                # 別な人が借りようとしたらｶﾘﾚﾅｲﾖ-ってことを出力
+                else:
+                    d = {'form': form, 'error_reseva': True}
+            # 予約されてなければそのまま借りる
+            else:
+                regist.who_want = 'なし'
+                # 本のデータベースを一回削除して貸出
+                Registration.objects.filter(book=regist.book).delete()
+                Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                            status='貸出中', mail=regist.mail, who_want=regist.who_want)
+                # 貸出したら同じページにリダイレクトしてフォームをリセット
+                return redirect('regist:regist_bot')
+        # 本が貸出中で予約なしなら予約の催促をする
+        elif Registration.objects.filter(book=regist.book, status='貸出中', who_want='なし').exists():
+            # 本とユーザー名を予約用のデータベースに登録する
+            Reservation.objects.create(wtr=regist.book, who=regist.user)
+            # 予約確認ページに飛ぶ
+            return redirect('regist:reservation')
+        # 予約されてるならそのことを出力
+        elif Registration.objects.filter(book=regist.book, status='貸出中').exists():
+            d = {'form': form, 'error_resrva': True}
+        # ここまで来たら本がないってエラー出す
+        else:
+            d = {'form': form, 'error': True}
+    # ページ読み込み時に表示するもの
+    else:
+        d = {'form': form}
+    # htmlにdをぶちこんでhtmlを操作
+    return render(request, 'regist/regist_bot.html', d)

@@ -1,0 +1,46 @@
+<!--base.htmlをもととして使うための宣言-->
+{% extends "base.html" %}
+<!--変化させるタイトル-->
+{% block title %}
+貸出登録ページ
+{% endblock title %}
+<!--base.htmlの対応部分に入れるための block content する-->
+{% block content %}
+<!--
+これにコメントアウトするのは心が折れたからほかのファイル参考にして、どうぞ
+-->
+<h2 class="name" style="width: 180px">貸出登録ページ</h2>
+<div style="flex-direction: column">
+<table class=form>
+<form action="" method="POST">
+    {% csrf_token %}
+    <tbody>
+        <tr>
+        <td>
+        {{form.book.label}}
+        {{ form.book }}</td>
+        </tr>
+        {% if error %}
+        <tr><td class="error">!!!error : その本は存在しません!!!</td></tr>
+        {% endif %}
+        {% if error_resrva %}
+        <tr><td class="error">!!!error : その本は予約されています !!!</td></tr>
+        {% endif %}
+        <tr>
+            <td>
+            {{form.user.label}}
+            {{ form.user }}</td>
+        </tr>
+        <tr>
+            <td>
+            {{form.mail.label}}
+            {{ form.mail }}</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td><input type="submit" value="借りる"></td>
+    </tr>
+</form>
+</table>
+</div>
+{% endblock content %}

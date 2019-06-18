@@ -25,7 +25,23 @@
             <th>{{ books.book }}</th><!--booksのなかのkeyがbookなものを取り出す-->
         </tr>
         {% endfor %}<!--for終了-->
+        </thead></table>
+        <h3 class="name" style="width:140px;">予約可能リスト</h3>
+            <table border="1" class = "table">
+        {% if can_reser %}
+        <thead>
+        <tr>
+            <th>本の名前</th>
+        </tr>
         </thead>
+        <thead>
+        {% for books in can_reser %}
+        <tr class="tables">
+            <th>{{ books.book }}</th>
+        </tr>
+        {% endfor %}
+        </thead>
+        {% endif %}
     </table>
     </div></div>
 </div>

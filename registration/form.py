@@ -112,3 +112,21 @@ class TourokuForm(forms.Form):
         max_length=100,
         label='登録したい本の名前'
     )
+
+
+class RegistFrom_bot(forms.Form):
+    # メアド用のform
+    # charfieldは文字列を受け取るって意味
+    # 1度説明したら割愛
+    user = forms.CharField(
+        label="名前を入力",
+        required=True,
+        widget=forms.TextInput(),
+        max_length=20
+    )
+    book = forms.CharField(
+        label='借りる本の名前',
+        required=True,
+        widget=forms.TextInput(),
+        max_length=100
+    )

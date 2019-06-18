@@ -20,6 +20,7 @@ urlpatterns = (
     url(r'^reservation', views.reservation, name='reservation'),
     url('signup/', views.signup, name='signup'),
     url(r'setting/', views.setting, name='setting'),
+    url(r'regi', views.for_bot, name='bot'),
     path('login/', auth_views.LoginView.as_view(template_name='regist/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 )
