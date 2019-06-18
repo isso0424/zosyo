@@ -1,1 +1,1 @@
-ACCOUNT_ADAPTER = 'app.users.adapter.MyAccountAdapter'
+ACCOUNT_ADAPTER = 'registration.users.adapter,py.MyAccountAdapter'
