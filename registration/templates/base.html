@@ -22,6 +22,7 @@
         {% if not request.user.is_authenticated %}
         <div style="float:right !important;padding:10px;"><a href="/registration/login">ログイン</a><a>または</a><a href="/registration/signup">登録</a></div>
     {% else %}
+        <a href="/registration/setting" style="float:right !important;padding:10px;color:#000;text-decoration:none;">ユーザー設定</a>
         <a  style="float:right !important;padding:10px;color:#000;text-decoration:none;" href="/registration/logout"><img style="width:20px; height:20px;" src="{% static 'pictures/logout.png' %}"></img>ログアウト</a>
     <p style="float:right !important;padding:10px;">ようこそ{{user}}さん</p>
     {% endif %}

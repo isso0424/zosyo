@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm
 from .models import Registration, Reservation, Search
 from django.utils import timezone
-
+from allauth.socialaccount import models
 
 # Create your views here.
 ########################################################
@@ -329,3 +329,12 @@ def signup(request):
         form = SignUpForm()
     context = {'form': form}
     return render(request, 'regist/signup.html', context)
+
+
+def setting(request):
+    if request.user.is_authenticated:
+        username = str(request.user)
+        d = {'user': username}
+        return render(request, 'regist/setting.html', d)
+    else:
+        return redirect('regist:non_login.html')
