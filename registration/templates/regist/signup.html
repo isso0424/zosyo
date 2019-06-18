@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <h1>登録ページ</h1><div class="form">
 <form action="" method="post" class="form" style="width:auto !important;">
     <table>
@@ -33,4 +34,5 @@
 </form>
     <div>
 <a href= "{% url 'regist:login' %}">ログイン</a></div></div>
+<div><a href="/accounts/discord/login" style="background-color: #505050 !important;color:#FFF;text-decoration:none;padding:10px;">discordでログイン<img style="width:40px; height:40px;" src="{% static 'pictures/discord.jpg' %}"></a> </div>
 {% endblock content %}

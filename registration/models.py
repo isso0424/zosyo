@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from django.contrib.auth.models import User
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser, UserManager
 
 
 # データベースのモデルを作成するクラス達
@@ -46,3 +44,10 @@ class RegistAdmin(admin.ModelAdmin):
 
     def registration(self, instance):
         return instance
+
+
+class User(AbstractUser):
+    objects = UserManager()
+
+    class Meta(object):
+        app_label = 'accounts'
