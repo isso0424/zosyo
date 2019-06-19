@@ -378,7 +378,7 @@ def for_bot(request):
                     Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                                 status='貸出中', mail=regist.mail, who_want='なし')
                     # 貸出したら同じページにリダイレクトしてフォームをリセット
-                    return redirect('regist:regist_bot')
+                    return redirect('regist:bot')
                 # 別な人が借りようとしたらｶﾘﾚﾅｲﾖ-ってことを出力
                 else:
                     d = {'form': form, 'error_reseva': True}
@@ -390,7 +390,7 @@ def for_bot(request):
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
                                             status='貸出中', mail=regist.mail, who_want=regist.who_want)
                 # 貸出したら同じページにリダイレクトしてフォームをリセット
-                return redirect('regist:regist_bot')
+                return redirect('regist:bot')
         # 本が貸出中で予約なしなら予約の催促をする
         elif Registration.objects.filter(book=regist.book, status='貸出中', who_want='なし').exists():
             # 本とユーザー名を予約用のデータベースに登録する
