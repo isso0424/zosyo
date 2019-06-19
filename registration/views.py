@@ -360,8 +360,8 @@ def for_bot(request):
         # book,user,mailはformに入力されている内容をform.cleaned_data.get('formの名前')で取得
         regist.book = form.cleaned_data.get('book')
         regist.user = form.cleaned_data.get('user')
-        if User.objects.exclude(username=regist.user).exists():
-            return ('regist:home')
+        if not User.objects.filter(username=regist.user).exists():
+            return redirect('regist:home')
         regist.email = User.objects.filter(username=regist.user).values('email')
         # 下２つはリセット用
         regist.status = "貸出中"
