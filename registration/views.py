@@ -399,10 +399,10 @@ def for_bot(request):
             return redirect('regist:reservation')
         # 予約されてるならそのことを出力
         elif Registration.objects.filter(book=regist.book, status='貸出中').exists():
-            d = {'form': form, 'error_resrva': True}
+            return redirect('regist:book_list')
         # ここまで来たら本がないってエラー出す
         else:
-            d = {'form': form, 'error': True}
+            return redirect('regist:retur')
     # ページ読み込み時に表示するもの
     else:
         d = {'form': form}
