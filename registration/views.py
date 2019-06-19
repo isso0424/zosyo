@@ -362,7 +362,7 @@ def for_bot(request):
         regist.user = form.cleaned_data.get('user')
         if not User.objects.filter(username=regist.user).exists():
             return redirect('regist:home')
-        regist.email = User.objects.filter(username=regist.user).values('email')
+        regist.email = User.objects.filter(username=regist.user).values('email')[0]
         # 下２つはリセット用
         regist.status = "貸出中"
         # 入力された本のタイトルがデータベースにあり、借りられていないか判定
@@ -381,7 +381,7 @@ def for_bot(request):
                     return redirect('regist:bot')
                 # 別な人が借りようとしたらｶﾘﾚﾅｲﾖ-ってことを出力
                 else:
-                    d = {'form': form, 'error_reseva': True}
+                    return redirect('regist:book_list')
             # 予約されてなければそのまま借りる
             else:
                 regist.who_want = 'なし'
