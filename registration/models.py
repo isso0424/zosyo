@@ -40,7 +40,6 @@ class Search(models.Model):
 
 class RegistAdmin(admin.ModelAdmin):
     list_display = ('book', )
-    fields = ('book', )
 
     def registration(self, instance):
         return instance
