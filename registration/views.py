@@ -362,7 +362,6 @@ def for_bot(request):
         regist.user = form.cleaned_data.get('user')
         if not User.objects.filter(username=regist.user).exists():
             return redirect('regist:home')
-        regist.email = User.objects.filter(username=regist.user).values('email')[0]
         # 下２つはリセット用
         regist.status = "貸出中"
         # 入力された本のタイトルがデータベースにあり、借りられていないか判定
@@ -376,7 +375,7 @@ def for_bot(request):
                     # Trueならその本のデータベースを一回削除して予約者なしにして貸出
                     Registration.objects.filter(book=regist.book).delete()
                     Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
-                                                status='貸出中', mail=regist.mail, who_want='なし')
+                                                status='貸出中', mail='discord', who_want='なし')
                     # 貸出したら同じページにリダイレクトしてフォームをリセット
                     return redirect('regist:bot')
                 # 別な人が借りようとしたらｶﾘﾚﾅｲﾖ-ってことを出力
@@ -388,7 +387,7 @@ def for_bot(request):
                 # 本のデータベースを一回削除して貸出
                 Registration.objects.filter(book=regist.book).delete()
                 Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
-                                            status='貸出中', mail=regist.mail, who_want=regist.who_want)
+                                            status='貸出中', mail='discord', who_want=regist.who_want)
                 # 貸出したら同じページにリダイレクトしてフォームをリセット
                 return redirect('regist:bot')
         # 本が貸出中で予約なしなら予約の催促をする
