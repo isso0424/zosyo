@@ -229,10 +229,10 @@ def book_list(request):
     if request.user.is_authenticated:
         username = str(request.user)
     # ラボ内にある本をIn_labとしてhtmlで使用
-        d = {'In_lab': Registration.objects.filter(status="ラボ内"),
+        d = {'In_lab': Registration.objects.filter(status="ラボ内", who_want='なし'),
              'can_reser': Registration.objects.filter(status="貸出中", who_want='なし'), "user": username}
     else:
-        d = {'In_lab': Registration.objects.filter(status="ラボ内"),
+        d = {'In_lab': Registration.objects.filter(status="ラボ内", who_want='なし'),
              'can_reser': Registration.objects.filter(status="貸出中", who_want='なし')}
     # おまじない
     return render(request, 'regist/book_list.html', d)
