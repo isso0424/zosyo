@@ -450,4 +450,4 @@ def bot_return(request):
     else:
         d = {'form': form}
     # おまじない
-    return render(request, 'regist/retur.html', d)
+    return render(request, 'regist/rebot.html', d)
