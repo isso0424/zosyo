@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm, RegistFrom_bot
+from .form import RegistFrom, ReturForm, Who_Want, TourokuForm, Books_SearchForm, SignUpForm, RegistFrom_bot, \
+    ReturForm_bot
 from .models import Registration, Reservation, Search
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -412,15 +413,16 @@ def for_bot(request):
 # 返却ページのコントローラ－
 def bot_return(request):
     # formは返却用のReturFormを使用
-    form = ReturForm(request.POST or None)
+    form = ReturForm_bot(request.POST or None)
     # formに値が入力されていたらTrue
     if form.is_valid():
         # どのデータベースに代入するかわかりやすいようにregistにRegistrationを代入
         regist = Registration()
         # ('book')にform.cleaned_date.getで本を代入
         regist.book = form.cleaned_data.get('book')
+        regist.user = form.cleaned_data.get('user')
         # 入力された本があるかどうか判定
-        if Registration.objects.filter(book=regist.book).exists():
+        if Registration.objects.filter(book=regist.book, user=regist.user).exists():
             # 以下の4つは初期化用
             regist.mail = 'なし'
             regist.user = 'なし'

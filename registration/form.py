@@ -130,3 +130,18 @@ class RegistFrom_bot(forms.Form):
         widget=forms.TextInput(),
         max_length=100
     )
+
+
+class ReturForm_bot(forms.Form):
+    book = forms.CharField(
+        label='返す本の名前',
+        required=True,
+        widget=forms.TextInput(),
+        max_length=100
+    )
+    user = forms.CharField(
+        label="名前を入力",
+        required=True,
+        widget=forms.TextInput(),
+        max_length=20
+    )
