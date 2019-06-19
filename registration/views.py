@@ -407,3 +407,47 @@ def for_bot(request):
         d = {'form': form}
     # htmlにdをぶちこんでhtmlを操作
     return render(request, 'regist/regist_bot.html', d)
+
+
+# 返却ページのコントローラ－
+def bot_return(request):
+    # formは返却用のReturFormを使用
+    form = ReturForm(request.POST or None)
+    # formに値が入力されていたらTrue
+    if form.is_valid():
+        # どのデータベースに代入するかわかりやすいようにregistにRegistrationを代入
+        regist = Registration()
+        # ('book')にform.cleaned_date.getで本を代入
+        regist.book = form.cleaned_data.get('book')
+        # 入力された本があるかどうか判定
+        if Registration.objects.filter(book=regist.book).exists():
+            # 以下の4つは初期化用
+            regist.mail = 'なし'
+            regist.user = 'なし'
+            regist.day = 'なし'
+            regist.status = "ラボ内"
+            # 予約されてるか判定
+            if Registration.objects.filter(book=regist.book).exclude(who_want='なし').exists():
+                # 予約してる人を取得
+                regist.who_want = Registration.objects.filter(book=regist.book).values('who_want')[0]
+                # その本のデータベースの削除
+                Registration.objects.filter(book=regist.book).delete()
+                # データベースの作り直し
+                Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                            status=regist.status, mail=regist.mail,
+                                            who_want=regist.who_want['who_want'])
+            # 予約されてない場合の操作
+            else:
+                # その本のデータベースの削除
+                Registration.objects.filter(book=regist.book).delete()
+                # データベースの作り直し
+                Registration.objects.create(book=regist.book, user=regist.user, day=regist.day,
+                                            status=regist.status, mail=regist.mail, who_want='なし')
+            # どっちにせよ返却したあとリダイレクトしてフォームをリセット
+            return redirect('regist:rebot')
+        else:
+            return redirect('regist:home')
+    else:
+        d = {'form': form}
+    # おまじない
+    return render(request, 'regist/retur.html', d)
