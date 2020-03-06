@@ -20,8 +20,10 @@ urlpatterns = (
     url(r'^reservation', views.reservation, name='reservation'),
     url('signup/', views.signup, name='signup'),
     url(r'setting/', views.setting, name='setting'),
-    url(r'regi', views.for_bot, name='bot'),
+    url(r'regi', views.for_bot, name='bogi'),
     url(r'rebot', views.bot_return, name='rebot'),
+    url(r'bot', views.bot_page, name='bot'),
     path('login/', auth_views.LoginView.as_view(template_name='regist/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout')
+
 )
